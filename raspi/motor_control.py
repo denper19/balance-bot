@@ -6,10 +6,10 @@ MOTOR1_A = 40
 MOTOR1_B = 38
 MOTOR2_A = 37
 MOTOR2_B = 35
-#MOTOR1_ENA
-#MOTOR1_ENB
-#MOTOR2_ENA
-#MOTOR2_ENB
+MOTOR1_ENA = 8
+MOTOR1_ENB = 10
+MOTOR2_ENA = 16
+MOTOR2_ENB = 18
 
 
 def main():
@@ -32,10 +32,18 @@ def main():
     GPIO.setup(MOTOR2_A, GPIO.OUT)
     GPIO.setup(MOTOR2_B, GPIO.OUT)
 
+    GPIO.setup(MOTOR1_ENA, GPIO.IN)
+    GPIO.setup(MOTOR1_ENB, GPIO.IN)
+    GPIO.setup(MOTOR2_ENA, GPIO.IN)
+    GPIO.setup(MOTOR2_ENB, GPIO.IN)
+    
     GPIO.output(MOTOR1_A, GPIO.HIGH)
     GPIO.output(MOTOR1_B, GPIO.LOW)
     GPIO.output(MOTOR2_A, GPIO.HIGH)
     GPIO.output(MOTOR2_B, GPIO.LOW)
+
+    while True:
+        print(f'encoder state: {GPIO.input(MOTOR1_ENA)}, {GPIO.input(MOTOR2_ENA)}')
 
 if __name__ == '__main__':
     main()
