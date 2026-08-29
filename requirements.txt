@@ -2,3 +2,5 @@ attrs
 argparse
 mujoco
 onshape-to-robot
+matplotlib
+numpy
