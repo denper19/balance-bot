@@ -27,17 +27,10 @@ with mujoco.Renderer(model) as renderer:
         if len(frames) < data.time * framerate:
             renderer.update_scene(data)
             frames.append(renderer.render())
-print(model.opt.gravity)    
-#plt.plot(times, [a[0] for a in acceldata], label='Accel X')
-#plt.plot(times, [a[1] for a in acceldata], label='Accel Y')
-#plt.plot(times, [a[2] for a in acceldata], label='Accel Z')
 prev_time = times[0]
 for i, g in enumerate(gyrodata):
     tilt_angle = g[0] * (times[i] - prev_time) * TO_DEG
     tilt.append(tilt_angle)
     prev_time = times[i]
 plt.plot(times, tilt, label='Tilt Angle')
-#plt.plot(times, [g[0] for g in gyrodata], label='Gyro X')
-#plt.plot(times, [g[1] for g in gyrodata], label='Gyro Y')
-#plt.plot(times, [g[2] for g in gyrodata], label='Gyro Z')
 plt.show()
