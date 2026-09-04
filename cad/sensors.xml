@@ -1,0 +1,10 @@
+<sensor>
+	<framequat name="imu_quat" objtype="site" objname="imu"/>
+	<gyro name="imu_gyro" site="imu"/>
+	<accelerometer name="imu_accel" site="imu"/>
+
+	<jointpos name="left_wheel_pos" joint="wheel1"/>
+	<jointvel name="left_wheel_vel" joint="wheel1"/>
+	<jointpos name="right_wheel_pos" joint="wheel2"/>
+	<jointvel name="right_wheel_vel" joint="wheel2"/>
+</sensor>

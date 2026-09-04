@@ -1,4 +1,9 @@
 {
 	"url":"https://cad.onshape.com/documents/740d5402aae08c0fa4f6d6f2/w/2e2c6d5b3e262629ae121e1f/e/18d36e26c3fc768475e27b5f",
 	"output_format":"mujoco",
+	"additional_xml":"sensors.xml",
+	"joint_properties":{
+		"wheel*":{"type":"motor"}
+	},
+	"draw_frames":true,
 }

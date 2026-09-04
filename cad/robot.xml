@@ -5,7 +5,8 @@
   <compiler angle="radian" meshdir="assets" autolimits="true"/>
   <default>
     <default class="cad">
-      <joint frictionloss="0.1" armature="0.005"/>
+      <joint frictionloss="0.1" armature="0.00082"/>
+      <position kp="50" dampratio="1"/>
       <default class="visual">
         <geom type="mesh" contype="0" conaffinity="0" group="2"/>
       </default>
@@ -14,36 +15,52 @@
       </default>
     </default>
   </default>
+  <!-- Additional sensors.xml -->
+  <sensor>
+    <framequat name="imu_quat" objtype="site" objname="imu"/>
+    <gyro name="imu_gyro" site="imu"/>
+    <accelerometer name="imu_accel" site="imu"/>
+    <jointpos name="left_wheel_pos" joint="wheel1"/>
+    <jointvel name="left_wheel_vel" joint="wheel1"/>
+    <jointpos name="right_wheel_pos" joint="wheel2"/>
+    <jointvel name="right_wheel_vel" joint="wheel2"/>
+  </sensor>
   <worldbody>
     <!-- Link chassis -->
-    <body name="chassis" pos="0 0 0.2" quat="1 0 0 0" childclass="cad">
-	  <freejoint name="root"/>
-      <inertial pos="-0.0294002 -0.129715 -0.0840581" mass="0.229391" fullinertia="0.000501179 0.00130809 0.00103131 -4.643e-09 3.97659e-07 2.9889e-07"/>
+    <body name="chassis" pos="0 0 0.154277" quat="1 0 0 0" childclass="cad">
+      <freejoint name="chassis_freejoint"/>
+      <inertial pos="3.5961e-05 2.1653e-05 -0.029607" mass="0.642509" fullinertia="0.000619608 0.00138348 0.00114323 -4.887e-09 5.01045e-07 3.7549e-07"/>
       <!-- Part motor_right -->
-      <geom type="mesh" class="visual" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="motor_right" material="motor_right_material"/>
-      <geom type="mesh" class="collision" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="motor_right" material="motor_right_material"/>
+      <geom type="mesh" class="visual" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="motor_right" material="motor_right_material"/>
+      <geom type="mesh" class="collision" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="motor_right" material="motor_right_material" mass="0.0306"/>
       <!-- Part chassis -->
-      <geom type="mesh" class="visual" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="chassis" material="chassis_material"/>
-      <geom type="mesh" class="collision" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="chassis" material="chassis_material"/>
+      <geom type="mesh" class="visual" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="chassis" material="chassis_material"/>
+      <geom type="mesh" class="collision" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="chassis" material="chassis_material"/>
+      <!-- Part imu_2 -->
+      <geom type="mesh" class="visual" pos="0.0171343 -0.151121 -0.0968" quat="0.5 -0.5 0.5 -0.5" mesh="imu" material="imu_material"/>
+      <geom type="mesh" class="collision" pos="0.0171343 -0.151121 -0.0968" quat="0.5 -0.5 0.5 -0.5" mesh="imu" material="imu_material"/>
       <!-- Part motor_left -->
-      <geom type="mesh" class="visual" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="motor_left" material="motor_left_material"/>
-      <geom type="mesh" class="collision" pos="0.0337191 -0.129677 -0.152838" quat="0.5 -0.5 0.5 -0.5" mesh="motor_left" material="motor_left_material"/>
+      <geom type="mesh" class="visual" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="motor_left" material="motor_left_material"/>
+      <geom type="mesh" class="collision" pos="0.0631796 7.77589e-05 -0.106" quat="0.5 -0.5 0.5 -0.5" mesh="motor_left" material="motor_left_material" mass="0.0306"/>
+      <!-- Part iniu -->
+      <geom type="mesh" class="visual" pos="0.0368621 -0.00591677 0.0686" quat="0.5 0.5 0.5 0.5" mesh="iniu" material="iniu_material"/>
+      <geom type="mesh" class="collision" pos="0.0368621 -0.00591677 0.0686" quat="0.5 0.5 0.5 0.5" mesh="iniu" material="iniu_material"/>
       <!-- Frame imu -->
-	  <site name="imu_site" type="box" size="0.003 0.003 0.00035" pos="-0.0294809 -0.169406 -0.0343379" quat="0.707107 -0 0 -0.707107" rgba="0 0 1.0 1.0"/>
+      <site group="3" name="imu" pos="-2.04186e-05 -0.0396514 0.0125" quat="0.707107 0 -0 0.707107"/>
       <!-- Link wheel_left -->
-      <body name="wheel_left" pos="-0.116881 -0.129677 -0.152838" quat="0.450335 0.545159 -0.450335 -0.545159">
+      <body name="wheel_left" pos="-0.0874204 7.77589e-05 -0.106" quat="0.105582 -0.69918 -0.105582 0.69918">
         <!-- Joint from chassis to wheel_left -->
         <joint axis="0 0 1" name="wheel1" type="hinge"/>
-        <inertial pos="-1.8653e-08 -1.32e-09 0.00912701" mass="0.0296221" fullinertia="1.19513e-05 1.19507e-05 2.00869e-05 1e-12 -0 -0"/>
+        <inertial pos="-1.8653e-08 -1.32e-09 0.00912701" mass="0.0596221" fullinertia="1.19513e-05 1.19507e-05 2.00869e-05 1e-12 -0 -0"/>
         <!-- Part wheel_left -->
-        <geom type="mesh" class="visual" pos="-0 0 0.021" quat="1 0 0 0" mesh="wheel_left" material="wheel_left_material"/>
-        <geom type="mesh" class="collision" pos="-0 0 0.021" quat="1 0 0 0" mesh="wheel_left" material="wheel_left_material"/>
+        <geom type="mesh" class="visual" pos="0 0 0.021" quat="1 -0 -0 0" mesh="wheel_left" material="wheel_left_material"/>
+        <geom type="mesh" class="collision" pos="0 0 0.021" quat="1 -0 -0 0" mesh="wheel_left" material="wheel_left_material"/>
       </body>
       <!-- Link wheel_right -->
-      <body name="wheel_right" pos="0.0579191 -0.129677 -0.152838" quat="0.707086 -0.00536208 0.707086 -0.00536208">
+      <body name="wheel_right" pos="0.0873796 7.77589e-05 -0.106" quat="0.66973 0.226851 0.66973 0.226851">
         <!-- Joint from chassis to wheel_right -->
         <joint axis="0 0 1" name="wheel2" type="hinge"/>
-        <inertial pos="-1.8653e-08 -1.32e-09 0.00912701" mass="0.0296221" fullinertia="1.19513e-05 1.19507e-05 2.00869e-05 1e-12 -0 -0"/>
+        <inertial pos="-1.8653e-08 -1.32e-09 0.00912701" mass="0.0596221" fullinertia="1.19513e-05 1.19507e-05 2.00869e-05 1e-12 -0 -0"/>
         <!-- Part wheel_right -->
         <geom type="mesh" class="visual" pos="0 0 0.021" quat="1 -0 -0 -0" mesh="wheel_right" material="wheel_right_material"/>
         <geom type="mesh" class="collision" pos="0 0 0.021" quat="1 -0 -0 -0" mesh="wheel_right" material="wheel_right_material"/>
@@ -51,29 +68,24 @@
     </body>
   </worldbody>
   <asset>
-    <mesh file="wheel_left.stl"/>
     <mesh file="chassis.stl"/>
     <mesh file="motor_left.stl"/>
-    <mesh file="wheel_right.stl"/>
+    <mesh file="iniu.stl"/>
     <mesh file="motor_right.stl"/>
+    <mesh file="wheel_right.stl"/>
+    <mesh file="imu.stl"/>
+    <mesh file="wheel_left.stl"/>
     <material name="motor_right_material" rgba="0.796078 0.823529 0.937255 1"/>
     <material name="chassis_material" rgba="0.647059 0.647059 0.647059 1"/>
+    <material name="imu_material" rgba="0.0627451 0.266667 0.490196 1"/>
     <material name="motor_left_material" rgba="0.796078 0.823529 0.937255 1"/>
+    <material name="iniu_material" rgba="0.34902 0.376471 0.4 1"/>
     <material name="wheel_left_material" rgba="0 0 0 1"/>
     <material name="wheel_right_material" rgba="0 0 0 1"/>
   </asset>
   <actuator>
-    <motor name="wheel1" joint="wheel1" gear="0.195" ctrlrange="-1 1"/>
-    <motor name="wheel2" joint="wheel2" gear="-0.195" ctrlrange="-1 1"/>
+    <motor class="cad" name="wheel1" joint="wheel1" gear="1" ctrllimited="true" ctrlrange="-0.1765 0.1765"/>
+    <motor class="cad" name="wheel2" joint="wheel2" gear="1" ctrllimited="true" ctrlrange="-0.1765 0.1765"/>
   </actuator>
-  <sensor>
-    <framequat name="imu_quat" objtype="site" objname="imu_site"/>
-    <accelerometer name="imu_acc" site="imu_site"/>
-    <gyro name="imu_gyro" site="imu_site"/>
-    <jointpos name="wheel1_pos" joint="wheel1"/>
-    <jointvel name="wheel1_vel" joint="wheel1"/>
-    <jointpos name="wheel2_pos" joint="wheel2"/>
-    <jointvel name="wheel2_vel" joint="wheel2"/>
-  </sensor>
   <equality/>
 </mujoco>

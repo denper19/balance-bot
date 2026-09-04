@@ -4,3 +4,4 @@ mujoco
 onshape-to-robot
 matplotlib
 numpy
+gymnasium

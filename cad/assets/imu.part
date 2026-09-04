@@ -4,10 +4,10 @@
     "documentMicroversion": "e9f4874a031bea87aa697da0",
     "elementId": "a9c3316126877ade63dfbb71",
     "fullConfiguration": "default",
-    "id": "M8eTkYuJv1i+Wzufx",
+    "id": "MlBvCEmSK4hcR0Il5",
     "isStandardContent": false,
-    "name": "wheel_right <1>",
-    "partId": "JgD",
+    "name": "imu <1>",
+    "partId": "JrD",
     "suppressed": false,
     "type": "Part"
 }
