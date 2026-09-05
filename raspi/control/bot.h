@@ -8,13 +8,13 @@
 
 #define LEFT_ENA 40
 #define LEFT_ENB 38
-#define LEFT_ENC_ENA 8 
-#define LEFT_ENC_ENB 10
+#define LEFT_ENC_ENA 24
+#define LEFT_ENC_ENB 19
 
 #define RIGHT_ENA 37
 #define RIGHT_ENB 35
-#define RIGHT_ENC_ENA 16
-#define RIGHT_ENC_ENB 18
+#define RIGHT_ENC_ENA 36
+#define RIGHT_ENC_ENB 12
 
 class Imu {
 	private:

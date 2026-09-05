@@ -4,11 +4,13 @@ BotControl* BotControl::instance = nullptr;
 
 BotControl::BotControl() {
 	instance = this;
+	left_encoder_tick = 0;
+	right_encoder_tick = 0;
 
-	if (wiringPiSetupGpio() < 0) {
+	if (wiringPiSetupPhys() < 0) {
 		std::cout << "Failed to init wiring pi" << std::endl;
 	}
-	
+
 	pinMode(LEFT_ENA, OUTPUT);
 	pinMode(LEFT_ENB, OUTPUT);
 	pinMode(RIGHT_ENA, OUTPUT);
@@ -18,6 +20,12 @@ BotControl::BotControl() {
 	pinMode(LEFT_ENC_ENB, INPUT);
 	pinMode(RIGHT_ENC_ENA, INPUT);
 	pinMode(RIGHT_ENC_ENB, INPUT);
+
+	// open-drain encoder outputs float when not triggered - pull them up so noise doesn't fire spurious edges
+	pullUpDnControl(LEFT_ENC_ENA, PUD_UP);
+	pullUpDnControl(LEFT_ENC_ENB, PUD_UP);
+	pullUpDnControl(RIGHT_ENC_ENA, PUD_UP);
+	pullUpDnControl(RIGHT_ENC_ENB, PUD_UP);
 
 	// setup interrupts change
 	wiringPiISR(LEFT_ENC_ENA, INT_EDGE_BOTH, &BotControl::UpdateLeftEncoder);
@@ -33,21 +41,21 @@ void BotControl::UpdateEncoders(const int motor)
 	if (motor == LEFT_MOTOR) {
 		pin_a = LEFT_ENC_ENA;
 		pin_b = LEFT_ENC_ENB;
-		tickPtr = &left_encoder_tick;	
+		tickPtr = &left_encoder_tick;
 	}
 	else if (motor == RIGHT_MOTOR){
 		pin_a = RIGHT_ENC_ENA;
 		pin_b = RIGHT_ENC_ENB;
-		tickPtr = &right_encoder_tick;	
+		tickPtr = &right_encoder_tick;
 	}
 
-	int state_a = digitalRead(pin_a);	
+	int state_a = digitalRead(pin_a);
 	int state_b = digitalRead(pin_b);
 
-	if (state_a > state_b){
+	if (state_a == state_b){ // forward
 		(*tickPtr)++;
 	}
-	else{
+	else{ // reverse
 		(*tickPtr)--;
 	}
 }	
