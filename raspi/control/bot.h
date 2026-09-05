@@ -1,7 +1,10 @@
 #pragma once
 #include <iostream>
 #include <array>
+#include <cstdlib>
+#include <algorithm>
 #include <wiringPi.h>
+#include <softPwm.h>
 
 #define LEFT_MOTOR 0
 #define RIGHT_MOTOR 1
@@ -32,6 +35,7 @@ class BotControl {
 		int left_encoder_tick, right_encoder_tick;
 		static BotControl* instance;
 	public:
+		Imu imu;
 		BotControl();
 		void ClearEncoders();
 		void GetEncoders(int& left, int& right);

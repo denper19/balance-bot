@@ -6,15 +6,16 @@ BotControl::BotControl() {
 	instance = this;
 	left_encoder_tick = 0;
 	right_encoder_tick = 0;
+	imu.SetCal({0.f, 0.f, 0.f}, {0.f, 0.f, 0.f});
 
 	if (wiringPiSetupPhys() < 0) {
 		std::cout << "Failed to init wiring pi" << std::endl;
 	}
 
 	pinMode(LEFT_ENA, OUTPUT);
-	pinMode(LEFT_ENB, OUTPUT);
 	pinMode(RIGHT_ENA, OUTPUT);
-	pinMode(RIGHT_ENB, OUTPUT);
+	softPwmCreate(LEFT_ENB, 0, 255);
+	softPwmCreate(RIGHT_ENB, 0, 255);
 
 	pinMode(LEFT_ENC_ENA, INPUT);
 	pinMode(LEFT_ENC_ENB, INPUT);
@@ -35,24 +36,21 @@ BotControl::BotControl() {
 void BotControl::UpdateEncoders(const int motor)
 {
 	
-	int pin_a, pin_b;
+	int pin_b;
 	int* tickPtr = nullptr;
 
 	if (motor == LEFT_MOTOR) {
-		pin_a = LEFT_ENC_ENA;
 		pin_b = LEFT_ENC_ENB;
 		tickPtr = &left_encoder_tick;
 	}
 	else if (motor == RIGHT_MOTOR){
-		pin_a = RIGHT_ENC_ENA;
 		pin_b = RIGHT_ENC_ENB;
 		tickPtr = &right_encoder_tick;
 	}
 
-	int state_a = digitalRead(pin_a);
 	int state_b = digitalRead(pin_b);
 
-	if (state_a == state_b){ // forward
+	if (state_b > 0){
 		(*tickPtr)++;
 	}
 	else{ // reverse
@@ -73,4 +71,12 @@ void BotControl::GetEncoders(int& left, int& right) {
 void BotControl::SetEncoders(const int& left, const int& right) {
 	left_encoder_tick = left;
 	right_encoder_tick = right;
+}
+
+void BotControl::SetSpeed(const int& left, const int& right) {
+	digitalWrite(LEFT_ENA, left >= 0 ? HIGH : LOW);
+	softPwmWrite(LEFT_ENB, std::min(std::abs(left), 255));
+
+	digitalWrite(RIGHT_ENA, right >= 0 ? HIGH : LOW);
+	softPwmWrite(RIGHT_ENB, std::min(std::abs(right), 255));
 }
