@@ -4,8 +4,11 @@ BotControl* BotControl::instance = nullptr;
 
 BotControl::BotControl() {
 	instance = this;
+	
+	left_encoder_tick = 0;
+	right_encoder_tick = 0;
 
-	if (wiringPiSetupGpio() < 0) {
+	if (wiringPiSetupPhys() < 0) {
 		std::cout << "Failed to init wiring pi" << std::endl;
 	}
 	
@@ -19,6 +22,11 @@ BotControl::BotControl() {
 	pinMode(RIGHT_ENC_ENA, INPUT);
 	pinMode(RIGHT_ENC_ENB, INPUT);
 
+	pullUpDnControl(LEFT_ENC_ENA, PUD_UP);
+	pullUpDnControl(LEFT_ENC_ENB, PUD_UP);
+	pullUpDnControl(RIGHT_ENC_ENA, PUD_UP);
+	pullUpDnControl(RIGHT_ENC_ENB, PUD_UP);
+
 	// setup interrupts change
 	wiringPiISR(LEFT_ENC_ENA, INT_EDGE_BOTH, &BotControl::UpdateLeftEncoder);
 	wiringPiISR(RIGHT_ENC_ENA, INT_EDGE_BOTH, &BotControl::UpdateRightEncoder);
@@ -27,24 +35,21 @@ BotControl::BotControl() {
 void BotControl::UpdateEncoders(const int motor)
 {
 	
-	int pin_a, pin_b;
+	int pin_b;
 	int* tickPtr = nullptr;
 
 	if (motor == LEFT_MOTOR) {
-		pin_a = LEFT_ENC_ENA;
 		pin_b = LEFT_ENC_ENB;
 		tickPtr = &left_encoder_tick;	
 	}
 	else if (motor == RIGHT_MOTOR){
-		pin_a = RIGHT_ENC_ENA;
 		pin_b = RIGHT_ENC_ENB;
 		tickPtr = &right_encoder_tick;	
 	}
 
-	int state_a = digitalRead(pin_a);	
 	int state_b = digitalRead(pin_b);
 
-	if (state_a > state_b){
+	if (state_b > 0){
 		(*tickPtr)++;
 	}
 	else{
