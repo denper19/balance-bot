@@ -24,7 +24,7 @@ BotControl::BotControl() {
 	wiringPiISR(RIGHT_ENC_ENA, INT_EDGE_BOTH, &BotControl::UpdateRightEncoder);
 }
 
-void BotControl::UpdateEncoders(int motor)
+void BotControl::UpdateEncoders(const int motor)
 {
 	
 	int pin_a, pin_b;
@@ -62,7 +62,7 @@ void BotControl::GetEncoders(int& left, int& right) {
 	right = right_encoder_tick;
 }
 
-void BotControl::SetEncoders(int& left, int& right) {
+void BotControl::SetEncoders(const int& left, const int& right) {
 	left_encoder_tick = left;
 	right_encoder_tick = right;
 }

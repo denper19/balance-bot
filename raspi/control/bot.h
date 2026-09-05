@@ -30,15 +30,14 @@ class Imu {
 class BotControl {
 	private:
 		int left_encoder_tick, right_encoder_tick;
-		Imu imu;
 		static BotControl* instance;
 	public:
 		BotControl();
 		void ClearEncoders();
 		void GetEncoders(int& left, int& right);
-		void SetEncoders(int& left, int& right);
-		void UpdateEncoders(int motor);
+		void SetEncoders(const int& left, const int& right);
+		void UpdateEncoders(const int motor);
 		static void UpdateLeftEncoder() {instance->UpdateEncoders(LEFT_MOTOR);}
 		static void UpdateRightEncoder() {instance->UpdateEncoders(RIGHT_MOTOR);};
-		void SetSpeed(int& left, int& right);
+		void SetSpeed(const int& left, const int& right);
 };
