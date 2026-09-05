@@ -84,8 +84,8 @@
     <material name="wheel_right_material" rgba="0 0 0 1"/>
   </asset>
   <actuator>
-    <motor class="cad" name="wheel1" joint="wheel1" gear="1" ctrllimited="true" ctrlrange="-0.1765 0.1765"/>
-    <motor class="cad" name="wheel2" joint="wheel2" gear="1" ctrllimited="true" ctrlrange="-0.1765 0.1765"/>
+    <motor class="cad" name="wheel1" joint="wheel1" gear="0.1765" ctrllimited="true" ctrlrange="-1 1"/>
+    <motor class="cad" name="wheel2" joint="wheel2" gear="0.1765" ctrllimited="true" ctrlrange="-1 1"/>
   </actuator>
   <equality/>
 </mujoco>

@@ -1,6 +1,9 @@
 #include "bot.h"
 
+BotControl* BotControl::instance = nullptr;
+
 BotControl::BotControl() {
+	instance = this;
 
 	if (wiringPiSetupGpio() < 0) {
 		std::cout << "Failed to init wiring pi" << std::endl;
