@@ -1,4 +1,78 @@
 #include "bot.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/i2c-dev.h>
+#include <cstdint>
+
+#define MPU6050_ADDR 0x68
+#define PWR_MGMT_1   0x6B
+#define ACCEL_XOUT_H 0x3B
+
+#define ACCEL_SCALE 16384.0f
+#define GYRO_SCALE  131.0f
+
+namespace {
+
+bool i2c_write_byte(int file, uint8_t reg, uint8_t value) {
+	uint8_t buf[2] = {reg, value};
+	return write(file, buf, 2) == 2;
+}
+
+bool i2c_read_bytes(int file, uint8_t reg, uint8_t* buffer, int length) {
+	if (write(file, &reg, 1) != 1) return false;
+	return read(file, buffer, length) == length;
+}
+
+} // namespace
+
+Imu::Imu() {
+	fd = open("/dev/i2c-1", O_RDWR);
+	if (fd < 0) {
+		std::cout << "Failed to open the I2C bus. Ensure I2C is enabled." << std::endl;
+		return;
+	}
+
+	if (ioctl(fd, I2C_SLAVE, MPU6050_ADDR) < 0) {
+		std::cout << "Failed to acquire bus access/talk to MPU6050." << std::endl;
+		return;
+	}
+
+	i2c_write_byte(fd, PWR_MGMT_1, 0x00); // wake the MPU6050 (starts in sleep mode)
+}
+
+void Imu::SetCal(const std::array<float,3> a_cal_in, const std::array<float,3> g_cal_in) {
+	for (int i = 0; i < 3; i++) {
+		a_cal[i] = a_cal_in[i];
+		g_cal[i] = g_cal_in[i];
+	}
+}
+
+void Imu::GetAcc(float& ax, float& ay, float& az) {
+	uint8_t data[14];
+	i2c_read_bytes(fd, ACCEL_XOUT_H, data, 14);
+
+	int16_t raw_ax = (data[0] << 8) | data[1];
+	int16_t raw_ay = (data[2] << 8) | data[3];
+	int16_t raw_az = (data[4] << 8) | data[5];
+
+	ax = raw_ax / ACCEL_SCALE - a_cal[0];
+	ay = raw_ay / ACCEL_SCALE - a_cal[1];
+	az = raw_az / ACCEL_SCALE - a_cal[2];
+}
+
+void Imu::GetGyr(float& gx, float& gy, float& gz) {
+	uint8_t data[14];
+	i2c_read_bytes(fd, ACCEL_XOUT_H, data, 14);
+
+	int16_t raw_gx = (data[8]  << 8) | data[9];
+	int16_t raw_gy = (data[10] << 8) | data[11];
+	int16_t raw_gz = (data[12] << 8) | data[13];
+
+	gx = raw_gx / GYRO_SCALE - g_cal[0];
+	gy = raw_gy / GYRO_SCALE - g_cal[1];
+	gz = raw_gz / GYRO_SCALE - g_cal[2];
+}
 
 BotControl* BotControl::instance = nullptr;
 
