@@ -2,6 +2,8 @@
 #include "bot.h"
 #include <math.h>
 
+#define DEBUG 4
+
 const float COMP_ALPHA = 0.99f;         // Alpha for complementary filter (must match training)
 const float TIMESTEP = 0.005f;          // Time (sec) between intervals
 const float MOTOR_SCALE = 1023.0f;      // Scale motors from [-1, 1] to [-1023, 1023]
@@ -20,6 +22,10 @@ float pitch = 0.0f;
 int32_t prev_enc_left = 0;
 int32_t prev_enc_right = 0;
 bool tipped = false;
+
+inline float constrain(float value, float low, float high) {
+  return value < low ? low : (value > high ? high : value);
+}
 
 int main() {
 
@@ -44,7 +50,7 @@ int main() {
 		float accel_pitch = -atan2f(ay, az);
 		pitch = COMP_ALPHA * (pitch + (pitch_rate * TIMESTEP)) + ((1.0f - COMP_ALPHA) * accel_pitch);
 		
-		bot.GetEncoder(&enc_left, &enc_right);
+		bot.GetEncoders(enc_left, enc_right);
   		enc_left = ENC_DIR_LEFT * enc_left;
   		enc_right = ENC_DIR_RIGHT * enc_right;
 	
@@ -81,7 +87,7 @@ int main() {
 			bot.SetSpeed(0, 0);
 			if (fabs(pitch) <= 0.3) {
 				tipped = false;
-				bot.ClearEncoder();
+				bot.ClearEncoders();
 				prev_enc_left = 0;
 				prev_enc_right = 0;
 				delay(RESET_TIME_MS);
@@ -96,6 +102,7 @@ int main() {
 		    std::cout << "pitch=" << pitch << " pitch_rate=" << pitch_rate << " vL=" << wheel_vel_left << " vR=" << wheel_vel_right << " tipped=" << (int)tipped << std::endl;
 		#endif
 
-	}
+		}
+	};
 	return 0;
 }
